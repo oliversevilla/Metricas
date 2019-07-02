@@ -1,0 +1,18 @@
+Options +FollowSymLinks +MultiViews
+RewriteEngine On
+RewriteBase /
+
+RewriteCond %{SCRIPT_FILENAME} !-d
+RewriteCond %{SCRIPT_FILENAME} !-f
+#Ejemplo cambio de dominio
+#Redirect 301 /pais/destino http://newdomain.com/pais/destino
+
+AddType application/x-httpd-php .shtml
+
+#RewriteCond %{HTTP_HOST} ^miservicioenlinea.com [NC]
+#RewriteRule ^(.*)$ http://www.miservicioenlinea.com/$1 [L,R=301]
+
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 1000
+php_value max_input_time 1000
