@@ -25,7 +25,8 @@ for($i=0;$i<count($arrMeta);$i++){
     
     if(floatval($arrMeta[$i]->me_completitud)==0 || floatval($arrMeta[$i]->me_consistencia)==0 || floatval($arrMeta[$i]->me_coherencia)==0){
         $background="#FFC2B3";
-        $valCoherencia = 0;//si completitud o consistencia son 0 -> coherencia tmb
+        // Descomentar aqui si se quiere Cohe=0 cuando Comple y Consi son 0
+        //$valCoherencia = 0;//si completitud o consistencia son 0 -> coherencia tmb.
     }
     else $background="#FFF";
     /*$arrMetricas = array(

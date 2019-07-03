@@ -62,13 +62,20 @@ if($tags['dc_title']!='') {
             }            
             $consistenciaDC=$permitido;//al final en la formula sumar y dividir para el total de metas, y actualizar en meoa
             //--------------------Evaluar formula Coherencia
-            
+            //para formula de Ochoa
+            if(trim($etiquetaDC=='dc_title')) $titulo=$contentDC;
+            if(trim($etiquetaDC=='dc_description')) $descripcion=$contentDC;
             //No existe para los metas analizados del DOM -> 1 para todos (coherente)
             $coherenciaDC=1;
             
-            
             $meta->insert($idOA,$arrCat[$i]->ca_id,-1,$contenidoDC,$etiquetaDC,$completitudDC,$consistenciaDC,$coherenciaDC);
         }
+        
+        //para formula de Ocohoa
+        $coherenciaOchoa = Qcoh($titulo,$descripcion,$coherenciaDC);
+        
+        //actualizo metrica Coherencia        
+        $meta->updateCoherencia($idOA,round($coherenciaOchoa,2)); 
         echo $oa->getMaxId();
     }
     else echo -2;//El OA no se pudo insertar (subir) en el servidor
@@ -80,7 +87,9 @@ elseif($xml->general->title->string!='') {
     ////foreach ($xml->general->title as $nodo) echo $nodo->string;
     $titulo=$xml->general->title->string;
     $std='LOM';
-    $idOA=$oa->insert($titulo,$std,$url);
+    
+    $idOA=$oa->insert($titulo,$std,$url);    
+    
     if($idOA > 0){
         //creacion de objeto catalogo
         $catalogo = new catalogo(2,'');//2 si es LOM
@@ -147,6 +156,11 @@ elseif($xml->general->title->string!='') {
             $coherenciaLOM=-1;
             
             $meta->insert($idOA,$arrCat[$i]->ca_id,-1,$contenidoLOM,$etiquetaLOM,$completitudLOM,$consistenciaLOM,$coherenciaLOM);
+            
+            //para formula de Ochoa
+            if(trim($etiquetaLOM=='title')) $titulo=$contentLOM;
+            if(trim($etiquetaLOM=='description')) $descripcion=$contentLOM;
+            
         }
         //Actualizar valor metrica Coherencia (fuera del FOR xq no se puede calcular dentro de esta iteracion)
         if(trim($structure)=='atomic'){
@@ -161,8 +175,13 @@ elseif($xml->general->title->string!='') {
         if(trim($structure)=='collection' || trim($structure)=='networked' ||trim($structure)=='hierarchical' || trim($structure)=='linear'){
             if(trim($aggregationLevel)=='2' || trim($aggregationLevel)=='3' || trim($aggregationLevel)=='4') $coherenciaLOMFinal=1; //0.5 para comprobar
         }
+        
+        //para formula de Ocohoa
+        $coherenciaOchoa = Qcoh($titulo,$descripcion,$coherenciaLOMFinal);
+        
         //actualizo metrica Coherencia
-        $meta->updateCoherencia($idOA,$coherenciaLOMFinal);
+        //$meta->updateCoherencia($idOA,$coherenciaLOMFinal);
+        $meta->updateCoherencia($idOA,round($coherenciaOchoa,2));
         echo $oa->getMaxId();//envio al FrontEnd un valor > 0
     }
     else echo -2;//El OA no se pudo insertar (subir) en el servidor    
@@ -174,7 +193,80 @@ else {
     echo -1;//No es DC ni LOM
 }
 
-exit;
+//Calculo de Coherencia con Ochoa
+function Qcoh($tit,$desc,$qcoh1){  
+    $Pi=0;$PiCuadrado=0;
+    $Qi=0;$QiCuadrado=0;
+    $PiQiProducto=0;$numerador=0;
+    //print_r(str_word_count($tit,1));
+    //print_r(str_word_count($tit, 1, 'àáãç3'));
+    
+    //pasar a minusculas
+    $tit=  strtolower($tit);
+    $desc = strtolower($desc);
+    
+    //Quitar articulos
+    $quitarArticulos = array(' mas. ',' el. ', 'no ',' tal ',' mas ', ' el ', ' la ', ' los ', ' ella ', ' un ', ' una ', ' unos ', ' unas  ', ' en ', ' con ', ' muy ', ' a ', ' y ', ' que ', ' es ', ' los ',' las ',' como ',' son ',' o ',' O ',' a ',' este ',' han ',' de ',' se ',' ya ',' del ',' por ',' lo ',' ha '); // para que sea palabras completas
+    $tit = str_replace($quitarArticulos, ' ', ' '.$tit.' ');
+    $desc = str_replace($quitarArticulos, ' ', ' '.$desc.' ');
+    
+    //Quitar caracteres especiales
+    $tit = str_replace('Á', 'a',$tit);$tit = str_replace('á', 'a',$tit);
+    $tit = str_replace('É', 'e',$tit);$tit = str_replace('é', 'e',$tit);
+    $tit = str_replace('Í', 'i',$tit);$tit = str_replace('í', 'i',$tit);
+    $tit = str_replace('Ó', 'o',$tit);$tit = str_replace('ó', 'o',$tit);
+    $tit = str_replace('Ú', 'u',$tit);$tit = str_replace('ú', 'u',$tit);
+    $tit = str_replace('Ñ', 'n',$tit);$tit = str_replace('ñ', 'n',$tit);
+    
+    $desc = str_replace('Á', 'a',$desc);$desc = str_replace('á', 'a',$desc);
+    $desc = str_replace('É', 'e',$desc);$desc = str_replace('é', 'e',$desc);
+    $desc = str_replace('Í', 'i',$desc);$desc = str_replace('í', 'i',$desc);
+    $desc = str_replace('Ó', 'o',$desc);$desc = str_replace('ó', 'o',$desc);
+    $desc = str_replace('Ú', 'u',$desc);$desc = str_replace('ú', 'u',$desc);
+    $desc = str_replace('Ñ', 'n',$desc);$desc = str_replace('ñ', 'n',$desc);
+    
+    //Transformar en arreglo las palabras contenidas en $titulo y $descripcion
+    $countPi = preg_match_all('/\pL+/u', $tit, $arrPiBruto); //$count=3 y $matches =(hola,mundo,hola)
+    $Pi1 = array_values(array_unique($arrPiBruto[0]));//$Pi=(hola,mundo), quita elementos repetidos
+    
+    $countQi = preg_match_all('/\pL+/u', $desc, $arrQiBruto);
+    $Qi1 = array_values(array_unique($arrQiBruto[0]));
+    //print_r($Qi);
+    
+    //Unir los arreglos    
+    $PiQiBruto=array_merge($Pi1,$Qi1);//contiene palabras del titulo (sin repetrise) y descripcion (sin repetrise), pero en la union pueden respetirse
+    $PiQiNeto=array_values(array_unique($PiQiBruto));//contiene palabras del titulo y descripcion q no se repiten
+    
+    //Variables de la formula
+    $n = count($PiQiNeto);//numero de palabras diferentes en $titulo + $descripcion que se compararan
+    $k = 2; //numero de metadatos que describen al OA y cuya coherencia se analizara    
+    
+    //Calculo de Pi y Qi
+    for($i=0;$i<count($PiQiNeto);$i++){
+        $Pi = substr_count(implode('ALGOPARAJUNTAR', $arrPiBruto[0]), $PiQiNeto[$i]);//num de veces q aparece el termino $i en $tit
+        $Qi = $Qi + substr_count(implode('ALGOPARAJUNTAR', $arrQiBruto[0]), $PiQiNeto[$i]);//num de veces q aparece el termino $i en $desc
+        $PiQi = $Pi * $Qi;
+        $PiAlCuadrado = $Pi * $Pi;
+        $QiAlCuadrado = $Qi * $Qi;
+        $PiQiProducto = $PiQiProducto + $PiQi;//sumatoria de productos en el numerador
+        $PiCuadrado = $PiCuadrado + $PiAlCuadrado;
+        $QiCuadrado = $QiCuadrado + $QiAlCuadrado;
+    }
+    //raiz de sumatorias de cuadrados en el denominador
+    $raizPiQi = sqrt ($PiCuadrado * $QiCuadrado);
+    //calculo el numerador de la formula general, segun el numero de metas analizadas (2: $tit y $desc)
+    for($j=0;$j<$k;$j++){
+        $numerador = $numerador + ($PiQiProducto / $raizPiQi);
+    }
+    //Calculo de la Coherencia
+    $Qcoh = ($numerador / $k);
+    //$promedio y calculo final de la Coherencia
+    $Qcoh = ($qcoh1 + $Qcoh) / 2;
+    
+    if($Qcoh >= 0.7) $Qcoh = 1;
+        
+    return $Qcoh;
+}
 
 
 
@@ -187,6 +279,11 @@ exit;
 
 
 
+
+
+
+
+/*
 global $VGPathDocsServer; //'/var/www/html/apps/coac/docs/'
 
 session_start();
@@ -284,5 +381,5 @@ else{
     }
 }
 
-echo $result;
+echo $result;*/
 ?>

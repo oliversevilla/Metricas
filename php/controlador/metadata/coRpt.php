@@ -67,11 +67,13 @@ function printRpt($oa_id){
             $txtMetricas .="\r\n\r\nMetadata: ".htmlentities(trim($cat->ca_desc))."\r\n";
             if(floatval($arrMeta[$i]->me_completitud)==0){
                 $txtMetricas .="Metrica Completitud: 0 (inexistente)\r\n";
-                $bandera = 1;
+                // Descomentar aqui si se quiere Cohe=0 cuando Comple y Consi son 0
+                // $bandera = 1;
             }
             if(floatval($arrMeta[$i]->me_consistencia)==0){
                 $txtMetricas .="Metrica Consistencia: 0 (inexistente)\r\n";
-                $bandera = 1;
+                // Descomentar aqui si se quiere Cohe=0 cuando Comple y Consi son 0
+                //$bandera = 1;
             }
             if(floatval($arrMeta[$i]->me_coherencia)==0 || $bandera == 1){
                 $txtMetricas .="Metrica Coherencia: 0 (inexistente)\r\n";
