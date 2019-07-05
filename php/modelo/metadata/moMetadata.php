@@ -129,8 +129,9 @@ class metadata extends conexion
     function updateCoherencia($oa_id,$coherencia)
     {
         if($coherencia==0 || $coherencia=='' || !isset($coherencia)) $coherencia=0;
+        
         $query="UPDATE memetadata SET me_coherencia=$coherencia 
-        WHERE oa_id=$oa_id";
+        WHERE oa_id=$oa_id and me_etiqueta IN ('title','description','dc_title','dc_description')";
         
         $result = $this->strSql($query);        
         if($result) return $oa_id;
