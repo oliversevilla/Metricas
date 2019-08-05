@@ -18,7 +18,7 @@ $VGLat=-0.18284;
 
 $VGPathImagesServer = '/var/www/html/apps/coac/img/';
 $VGPathImagesAdminServer = '/var/www/html/apps/coac/img/';//linux "/var/www/...."
-$VGPathDocsServer = '/var/www/html/apps/coac/docs/';//Docs Tasa de Interes
+$VGPathDocsServer = '/var/www/html/apps/metricas/docs/';//'var/www/html/apps/coac/docs/';//Docs Tasa de Interes
 $VGSlash="\\";//linux "\\"
 
 
