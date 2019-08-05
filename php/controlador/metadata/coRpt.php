@@ -7,7 +7,7 @@ header('Pragma: no-cache');
 
 require_once("../../modelo/catalogo/moCatalogo.php");
 require_once("../../modelo/oa/moOA.php");
-require_once("../../modelo/metadata/moMetadata.php");
+require_once("../../modelo/meta/moMeta.php");
 
 /*$archivo = fopen('ReporteMetricas.txt','a');  //path es el mismo que coRpt.php
 fputs($archivo,$contenido); 
@@ -22,7 +22,7 @@ if ($fp = fopen($file,'w')) //w: borra texto anterior del file y agrega texto, a
 {
     if (is_writable($file))
     {
-        $text =  printRpt($_REQUEST['oa'])."\r\n";
+        $text =  printRpt($_REQUEST['oa_id'])."\r\n";
         $text .= "Por Oliver Sevilla - UTPL 2019";
         
         if (fwrite($fp, $text) === FALSE)
@@ -49,8 +49,8 @@ else
 function printRpt($oa_id){
     //Instanciar objetos    
     $oa = new oa($oa_id);
-    $meta = new metadata($oa->oa_id,'');
-    $arrMeta = $meta->arregloMetadata;    
+    $meta = new meta($oa_id,'');
+    $arrMeta = $meta->arregloMeta;    
     
     $txtMeta="";
     $txtMetricas="";
