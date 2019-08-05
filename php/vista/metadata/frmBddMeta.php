@@ -107,8 +107,8 @@ $arrMoneda=$moneda->arregloCatalogos;****/
                   <li><a href="../inicio"><i class="fa fa-home"></i> Inicio</a></li>                  
                   <li><a><i class="fa fa-bar-chart"></i> Calcular Métricas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="frmBddMeta">Desde una base de datos</a></li>
-                      <li class="current-page"><a href="">Desde una URL</a></li>                      
+                      <li class="current-page"><a href="">Desde una base de datos</a></li>
+                      <li><a href="frmNewMeta">Desde una URL</a></li>                      
                     </ul>
                   </li>
                   <li><a href="../oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
@@ -171,8 +171,8 @@ $arrMoneda=$moneda->arregloCatalogos;****/
         <div class="right_col" role="main">
           <div class="">
             <div class="page-title">
-              <div class="title_left">
-                <h3>Análisis de Métricas desde una URL<small></small> </h3>
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <h3>Análisis de Métricas desde una Base de Datos<small></small> </h3>
               </div>              
             </div>
 
@@ -185,70 +185,44 @@ $arrMoneda=$moneda->arregloCatalogos;****/
                   <div class="x_content">
                     <form class="form-horizontal form-label-left input_mask" style="min-height:50px;">                        
                         <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                            1. Ingrese la URL del repositorio<br />
-                            <small style="color:#AFBBC8;">La URL deberá dirigir a una web HTML (Dublin Core) o XML (LOM)</small>
+                            1. Seleccione el archivo de base de datos<br />
+                            <small style="color:#AFBBC8;">Archivo .txt con la lista de enlaces a los OAs (sin espacios en blanco, sin saltos de línea y separados por ';')</small>
                         </label>
-                        <br /><br /><br />                                                    
-                        <div class="col-xs-9 input-group has-feedback" style="left:10px;">
-                            <div class="input-group-addon">
-                            <i class="fa fa-globe"></i>
-                        </div>
-                        <input type="text" class="form-control pull-right" id="txtUrl" value="http://dspace.utpl.edu.ec/handle/123456789/5519"/>
-                        <!--<input style="font-size:14px;font-family:verdana,tahoma;background:#DCE2E7;" class="btn-lg" size="25" type="file" name="fileCli[]" id="archivoCli" onchange="$('#subio').css('visibility','hidden');" />-->
+                        <div class="col-xs-12 form-group has-feedback">
+                            <!--<small style="font-size:14px;color:#9CAABA;">Archivo .txt con la lista de enlaces a los OAs separados por ';'</small>-->
+                            <input style="font-size:14px;font-family:verdana,tahoma;background:#DCE2E7;" class="btn-lg" size="25" type="file" name="fileCli[]" id="archivoCli" onchange="$('#subio').css('visibility','hidden');" />
                         </div>
                     </form>                  
                     <br />
                     <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                        2. Subir los metadatas (HTML-XML) al Servidor<br />
-                        <small style="color:#AFBBC8;">Subir el archivo URL al servidor y verificar si cumple con los estándares Dublin Core o LOM</small>
+                        2. Subir el archivo TXT al servidor<br />
+                        <small style="color:#AFBBC8;">Verificar extensión .txt y subir al servidor</small>
                     </label>
                     <div class="col-xs-6 form-group has-feedback">
-                        <button class="btn-lg btn btn-success" onclick="tag.uploadURL($('#txtUrl').val());">Subir los Archivos</button><span id="subio" style="visibility: hidden;font-size:18px;color:#26B99A;"><i class="fa fa-check" style="color:#080;"></i> Archivos subidos</span>
+                        <button class="btn-lg btn btn-dark" onclick="tag.validateUploadFileTXT();">Subir el Archivo</button><span id="subio" style="visibility: hidden;font-size:18px;"><i class="fa fa-check" style="color:#080;"></i> Archivo subido</span>
                     </div>
                     <br />
                     <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
                         3. Realizar cáculo de métricas
                     </label>
                     <div class="col-xs-12 form-group has-feedback">
-                        <button class="btn-lg btn btn-success" onclick="tag.get($('#oa_id').val());">Calcular Métricas</button>
+                        <button class="btn-lg btn btn-success" onclick="tag.calcularTXT();">Calcular Métricas</button>
                     </div>
                     <br /><br />
-                    <div id="resultsMeta" style="display:none;">
+                    <div id="resultsMeta" style="display:none;"><br />                        
                         <table id="detRotef" class="table table-striped table-bordered nowrap jambo_table bulk_action" cellspacing="0" width="100%">
+                            <h2>Resultados:</h2><br />
                             <thead>
                               <tr style="font-size:10px;">
                                 <th>#</th>
-                                <th>Metadata</th>
-                                <th>Etiqueta</th>
-                                <th>Contenido</th>
-                                <th>Peso</th>
-                                <th>%</th>
-                                <th>Completitud</th>
-                                <th>Consistencia</th>
-                                <th>Coherencia</th>
-                                <th>Estándar</th>
+                                <th>URL</th>
+                                <th>Estado</th>
+                                <th>Métricas</th>                                
                               </tr>
                             </thead>
                             <tbody id="tblMeta">
                             </tbody>
                         </table>
-
-                        <!--<label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                            4. Graficar métricas
-                        </label>-->
-                        <div class="col-xs-12 form-group has-feedback">
-                            <!--<button class="btn-lg btn btn-danger" onclick="rptResu.importarCabecera()">Graficar Métricas</button>-->
-                            <strong>GRAFICAS:</strong>
-                        </div><br /><br />
-                        <div id="chart3" class="example-chart jqplot-target" style="height: 300px; width: 500px; position: relative;"></div>
-                        <br /><br />
-                        <span style="width:50px;height: 30px;background:#73C774;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;Y=1&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <span style="width:50px;height: 30px;background:#D9D97E;color:#000;">&nbsp;0.5<=Y<1&nbsp;</span>
-                        <span style="width:50px;height: 30px;background:#D97E7E;color:#000;">&nbsp;&nbsp;&nbsp;Y<0.5&nbsp;&nbsp;&nbsp;</span>
-                        <br /><br /><br /><br />
-                        <div id="rptMetricas" class="col-xs-12 form-group has-feedback" style="width:300px;height:80px;position:relative;left:-10px;">
-                            <button class='btn-sm btn btn-danger' onclick="tag.rpt($('#oa_id').val());">Generar Reporte de Métricas Inconsistentes</button>
-                        </div>
                     </div>
                   </div>
                 </div>
@@ -263,7 +237,7 @@ $arrMoneda=$moneda->arregloCatalogos;****/
         <!-- footer content -->
         <footer>
           <div class="pull-left">
-                <button class="btn-sm btn btn-dark" onclick="window.location.href='frmNewMeta';">Nuevo Análisis</button>
+                <button class="btn-sm btn btn-dark" onclick="window.location.href='frmBddMeta';">Nuevo Análisis</button>
           </div>
           <div class="pull-right">
             &copy; <?php echo date('Y');?> Análisis de Métricas por <a href="../index" target="_blank">Oliver Sevilla</a>
