@@ -154,45 +154,61 @@ function arrayDestinoToJSON(arreglo)
 }
 
 function showMsjSinBoton(msj){
-    _("overlay").style.visibility="visible";
-    _("mensaje").style.visibility="visible";
-    _('msjTxt').innerHTML='<span style="font-size:14px;">'+msj+'</span>';
+    //_("overlay").style.visibility="visible";
+    //_("mensaje").style.visibility="visible";
+    $("#overlay").css('visibility','visible');
+    $("#mensaje").css('visibility','visible')
+    //_('msjTxt').innerHTML='<span style="font-size:14px;">'+msj+'</span>';
+    $("#msjTxt").html('<span style="font-size:14px;">'+msj+'</span>');
 }
 
 function showMsj(msj){
-    _("overlay").style.visibility="visible";
-    _("mensaje").style.visibility="visible";
+    //_("overlay").style.visibility="visible";
+    //_("mensaje").style.visibility="visible";
+    $("#overlay").css('visibility','visible');
+    $("#mensaje").css('visibility','visible')
     msj += '<br /><button class="btn btn-success btn-flat" onclick="hideMsj();return;">Ok</button><br />';
-    _('msjTxt').innerHTML='<span style="font-size:14px;">'+msj+'</span>';
+    //_('msjTxt').innerHTML='<span style="font-size:14px;">'+msj+'</span>';
+    $("#msjTxt").html('<span style="font-size:14px;">'+msj+'</span>');
 }
 
 function hideMsj(){
-    _("overlay").style.visibility="hidden";
-    _("mensaje").style.visibility="hidden";
+    //_("overlay").style.visibility="hidden";
+    //_("mensaje").style.visibility="hidden";
+    $("#overlay").css('visibility','hidden');
+    $("#mensaje").css('visibility','hidden')
 }
 
 function showMsjSinOverlay(msj){
-    _("mensaje").style.visibility="visible";
+    //_("mensaje").style.visibility="visible";
+    $("#mensaje").css('visibility','visible')
     msj += '<br /><button class="btn btn-success btn-flat" onclick="hideMsjSinOverlay();return;">Ok</button><br />';
-    _('msjTxt').innerHTML='<span style="font-size:14px;">'+msj+'</span>';
+    //_('msjTxt').innerHTML='<span style="font-size:14px;">'+msj+'</span>';
+    $("#msjTxt").html('<span style="font-size:14px;">'+msj+'</span>');
 }
 
 function hideMsjSinOverlay(){
-    _("mensaje").style.visibility="hidden";
+    //_("mensaje").style.visibility="hidden";
+    $("#mensaje").css('visibility','hidden')
 }
 
 function showForm(idForm) {
-    _("overlay").style.visibility="visible";
-    _(idForm).style.visibility="visible";
-    _(idForm).style.display = 'block';
+    //_("overlay").style.visibility="visible";
+    $("#overlay").css('visibility','visible');
+    //_(idForm).style.visibility="visible";
+    $("#"+idForm).css('visibility','visible');
+    //_(idForm).style.display = 'block';
+    $("#"+idForm).css('display','block');
     _(idForm).style.zIndex = 1032;//1000002;
     /*$("#"+idForm).animate({top:"0px", opacity:1}, 100 );*/
 }
 
 function hideForm(idForm) {
     //$("#"+idForm).animate({top:"-600px", opacity:1}, 300 ,function() {
-        _(idForm).style.display = 'none';
-	_('overlay').style.visibility='hidden';
+        //_(idForm).style.display = 'none';
+        $("#"+idForm).css('display','none');
+	//_('overlay').style.visibility='hidden';
+        $("#overlay").css('visibility','hidden');
         ////_(idForm).style.zIndex = 1;
         ////$("#"+idForm).css("z-index", "1 !important");
     //});

@@ -10,7 +10,7 @@ function init()
 
 function initMeta()
 {
-    meta = new metadata();
+    tag = new meta();
 }
 
 function initResu()
