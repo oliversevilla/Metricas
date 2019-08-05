@@ -110,8 +110,13 @@ setlocale(LC_ALL,"es_ES");
               <div class="menu_section">                
                 <ul class="nav side-menu" style="font-size:13px;">
                   <li><a href=""><i class="fa fa-home"></i> Inicio</a></li>
-                  <li><a href="metadata/frmNewMeta"><i class="fa fa-bar-chart"></i> Iniciar Análisis de Métricas</a></li>
-                  <li><a href="metadata/frmNewMeta"><i class="fa fa-book"></i> Repositorios Libres</a></li>
+                  <li><a><i class="fa fa-bar-chart"></i> Calcular Métricas <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                      <li><a href="meta/frmBddMeta">Desde una base de datos</a></li>
+                      <li><a href="meta/frmNewMeta">Desde una URL</a></li>                      
+                    </ul>
+                  </li>
+                  <li><a href="oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
                 </ul>
               </div>
 
