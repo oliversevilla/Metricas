@@ -1,10 +1,13 @@
 var tag; //para instanciar esta clase
-
+//constructor
 function meta()
 {
     
 }
 
+//metodos
+
+//subir archivo al servidor
 meta.prototype.uploadURL = function(url){
     var este=this;
     if(url!="")
@@ -57,6 +60,7 @@ meta.prototype.uploadURL = function(url){
     }
 };
 
+//borrar metas
 meta.prototype.delete = function(url){
     var este=this;
     if(url!="")
@@ -92,6 +96,7 @@ meta.prototype.delete = function(url){
     }
 };
 
+//pobtener metas
 meta.prototype.get = function(oa){
     var este=this;
     if(oa>0)
@@ -129,6 +134,7 @@ meta.prototype.get = function(oa){
     }
 };
 
+//graficar metas
 meta.prototype.graficar = function(comp,cons,cohe){
     var compBarColor='#17BDB8',consBarColor='#17BDB8',coheBarColor='#17BDB8';
     var line1 = [['Completitud', comp],['Consistencia', cons],['Coherencia', cohe]];
@@ -165,8 +171,6 @@ meta.prototype.graficar = function(comp,cons,cohe){
     }
     
     $('#chart3').jqplot([line1], {
-        ////title:'Bar Chart with Custom Colors',
-        // Provide a custom seriesColors array to override the default colors.
         seriesColors:[compBarColor, consBarColor, coheBarColor],
         seriesDefaults:{
             renderer:$.jqplot.BarRenderer,
@@ -191,6 +195,7 @@ meta.prototype.graficar = function(comp,cons,cohe){
     });
 };
 
+//generar reporte de metas
 meta.prototype.rpt = function(oa){
     var este=this;
     if(oa>0)
@@ -221,15 +226,15 @@ meta.prototype.rpt = function(oa){
     }
 };
 
-function tooltipContentEditor(str, seriesIndex, pointIndex, plot) {
-    // display series_label, x-axis_tick, y-axis value
+//cambiar tootltiptext al pasar mouse sobre las graficas
+function tooltipContentEditor(str, seriesIndex, pointIndex, plot) {  
     return plot.series[seriesIndex]["label"] + ", " + plot.data[seriesIndex][pointIndex];
 }
 
 
 
 
-
+//descarga de archivos reportes
 meta.prototype.hash= function(str)
 {      
     this.descargarArchivo(new Blob([str.toString()], {type: 'text/plain'}), 'ReporteMetricas.txt');    
@@ -254,18 +259,16 @@ meta.prototype.descargarArchivo= function(contenidoEnBlob, nombreArchivo)
     reader.readAsDataURL(contenidoEnBlob);
 };
 
+//validar extension de archivo antes de subir al servidor
 meta.prototype.validateUploadFileTXT = function(){
     if($("#archivoCli").val()!="")
     {
-        ////var archivo = $("#archivo").val();
         var archivoCli = $("#archivoCli").val();
         var exts = new Array(".txt"); 
-        //var extension = (archivo.substring(archivo.lastIndexOf("."))).toLowerCase();	
         var extensionCli = (archivoCli.substring(archivoCli.lastIndexOf("."))).toLowerCase();
         var filePermitido = false;
         for (var i = 0; i < exts.length; i++) 
         {
-            //if (exts[i] == extension)
             if (exts[i] == extensionCli)
             {
                 filePermitido = true;
@@ -312,7 +315,7 @@ meta.prototype.validateUploadFileTXT = function(){
         $("#subio").css("visibility","hidden");
     }
 };
-
+//subir archivo base de datos y calcular metricas
 meta.prototype.calcularTXT = function(){
     if($("#archivoCli").val()!="")
     {
