@@ -1,6 +1,7 @@
 <?php
+    //incio sesion
     session_start();
-    //if (!isset($_SESSION['idUsuario']) || $_SESSION["rolUsuario"]!='ADMIN') {    
+    ////si no inicio sesion redirecciona a pagina de login
     if (!isset($_SESSION['idUsuario'])) {
         header("Location: ../../login");
         exit;
@@ -1128,8 +1129,8 @@
     </script>
     <!-- /Doughnut Chart -->
     
-    <!-- bootstrap-daterangepicker -->
     <script>
+        //Seteo y formateo de campos de texto, botones y otros elementos de interface
       $(document).ready(function() {
 
         var cb = function(start, end, label) {

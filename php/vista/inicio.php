@@ -1,39 +1,15 @@
 <?php
-//require_once("../modelo/transaccion/moTransaccion.php");
-//require_once("../modelo/cliente/moCliente.php");
-
-//require_once("../modelo/suscriptor/moSuscriptor.php");
-//require_once("../modelo/visita/moVisita.php");
-//require_once("../modelo/categoria/moCategoria.php");
-//require_once("../modelo/catalogo/moCatalogo.php");
-
+//inicio sesion
 session_start();
-
-//global $VGtamanoPagina;
-
-//$_SESSION['idUsuario']=1;//TEMPORAL hasta q se loguee, 1 es el id del ADMIN
-//
-//--------------------------------------------Usuario no autorizado
-//if (!isset($_SESSION['idUsuario']) || $_SESSION["rolUsuario"]!='ADMIN') {    
+//si no inicio sesion redirecciona a pagina de login
 if (!isset($_SESSION['idUsuario'])) {
     header("Location: ../../login");
     exit;
 }
 
-
-/*$cat1=new categoria('-1');
-$cat2=new categoria('-1');
-
-$cat1->getCategoriaNivel(1);
-$arrCat1=$cat1->arregloCategoria;
-
-$ciudad=new catalogo(2,'',$id_id);
-$arrCiudad=$ciudad->arregloCatalogos;*/
-
-////$transaccion=new transaccion(0,'',0,0,'');
+//vars locales
 $totTransaccion=450;////$transaccion->getTotal($_SESSION['idEmpresa'],'RTF');
 
-////$cliente=new cliente('');
 $totCliente=8;////$cliente->getTotal();
 
 $totalUsuario=50;
@@ -408,8 +384,9 @@ setlocale(LC_ALL,"es_ES");
     </script>
     <!-- /Skycons -->
 
-    <!-- Doughnut Chart -->
+    
     <script>
+        //Seteo y formateo de campos de texto, botones y otros elementos de interface
       $(document).ready(function(){
         var options = {
           legend: false,
