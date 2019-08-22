@@ -1,4 +1,5 @@
 <?php
+//carga settings de la bdd
 if (is_file("../clsConexion.php")){
     require_once("../clsConexion.php");
     require_once("../global.php");
@@ -19,15 +20,15 @@ else{
     require_once("clsConexion.php");//desde FE
     require_once("global.php");//desde FE
 }
-
+//creacion de la clase
 class instancia extends conexion {
-
+    //creacion de atributos de clase
     var $ta_id;
     var $ca_id;
     var $in_id;
     var $in_nombre;
     var $arregloInstancia;
-
+    //constructor
     function instancia($ta_id,$ca_id,$in_id) {
         if ($ta_id > 0) {            
             $filtro = "";
@@ -54,14 +55,14 @@ class instancia extends conexion {
             }
         }
     }
-
+    //creacion de objeto de clase
     function setInstancia($result) {
         $this->ta_id = $this->getField($result, 0);
         $this->ca_id = $this->getField($result, 1);
         $this->in_id = $this->getField($result, 2);
         $this->in_nombre = $this->getField($result, 3);
     }
-
+    //creacion de artreglo de objetos de clase
     function setArregloInstancia($result) {
         $instancia = new instancia(0, '', 0);
         $instancia->ta_id = $this->getField($result, 0);
