@@ -1,12 +1,14 @@
 <?php
+//carga de libs
 require_once("../../../global.php");
 require_once("../../modelo/catalogo/moCatalogo.php");
 require_once("../../modelo/oa/moOA.php");
 require_once("../../modelo/meta/moMeta.php");
-
+//incio de sesion
 session_start();
-
+//acceso a globales
 global $VGtamanoPagina;
+//si no inicio sesion redirecciona a pagina de login
 if (!isset($_SESSION['idUsuario'])) {
     header("Location: ../../../login");
     exit;
@@ -85,13 +87,6 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
     <link href="../../../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="../../../vendors/nprogress/nprogress.css" rel="stylesheet">
     <link href="../../../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!--<link href="../../../vendors/select2/dist/css/select2.min.css" rel="stylesheet">    
-    <link href="../../../build/css/custom.min.css" rel="stylesheet">
-    <link href="../../../css/estilo.css" rel="stylesheet">-->
-    <!-- JqPlot -->
-    <!--<link href="../../../css/jquery.jqplot.min.css" rel="stylesheet">
-    <link href="../../../css/shCoreDefault.min.css" rel="stylesheet">
-    <link href="../../../css/shThemejqPlot.min.css" rel="stylesheet">-->
     
     <!-- Datatables -->
     <link href="../../../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
@@ -158,7 +153,7 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
 
             <div class="clearfix"></div>
 
-            <!-- menu profile quick info -->
+            <!-- menu profile -->
             <div class="profile">
               <div class="profile_pic">
                 <img src="../../../img/img.jpg" alt="..." class="img-circle profile_img">
@@ -332,68 +327,6 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
         <div id="msjTxtErr"></div>
         <center><button class="btn btn-success btn-flat" onclick="hideMsjErr();return;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button></center><br />
     </div>
-    
-    <!--<div id="cargando">
-        <div id="imgCentrada"><img src="../../../img/loading1.gif" /></div>
-        <div id="progstat"></div>
-        <div id="progress"></div>
-    </div>-->
-    
-    <!--
-    <script src="../../../vendors/jquery/dist/jquery.min.js"></script>
-    <script src="../../../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
-    
-    <script src="../../../vendors/fastclick/lib/fastclick.js"></script>
-    <script src="../../../vendors/nprogress/nprogress.js"></script>
-    <script src="../../../vendors/iCheck/icheck.min.js"></script>
-    
-    <script src="../../../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-    <script src="../../../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
-    <script src="../../../vendors/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../../../vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
-    <script src="../../../vendors/datatables.net-buttons/js/buttons.flash.min.js"></script>
-    <script src="../../../vendors/datatables.net-buttons/js/buttons.html5.min.js"></script>
-    <script src="../../../vendors/datatables.net-buttons/js/buttons.print.min.js"></script>
-    <script src="../../../vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
-    <script src="../../../vendors/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
-    <script src="../../../vendors/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../../../vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
-    <script src="../../../vendors/datatables.net-scroller/js/datatables.scroller.min.js"></script>
-    
-    <script src="../../../vendors/jszip/dist/jszip.min.js"></script>
-    <script src="../../../vendors/pdfmake/build/pdfmake.min.js"></script>
-    <script src="../../../vendors/pdfmake/build/vfs_fonts.js"></script>
-    
-    <script src="../../../vendors/iCheck/icheck2.min.js"></script>
-    <script src="../../../build/js/custom.min.js"></script>
-    
-    
-    <script src="../../../js/jquery.jqplot.min.js"></script>
-    <script src="../../../js/jqplot.min.js"></script>
-    <script src="../../../js/shCore.min.js"></script>
-    <script src="../../../js/shBrushJScript.min.js"></script>    
-    <script src="../../../js/shBrushXml.min.js"></script>    
-    <script src="../../../js/jqplot.highlighter.min.js"></script>    
-    <script src="../../../js/jqplot.barRenderer.min.js"></script>
-    <script src="../../../js/jqplot.categoryAxisRenderer.min.js"></script>
-    
-    <script language="javascript" type="text/javascript" src="../../../js/meta/meta.js"></script>
-    <script language="javascript" type="text/javascript" src="../../../js/global.js"></script>
-    <script language="javascript" type="text/javascript" src="../../../js/inicio.js"></script>    
-    -->
 
-    <!-- /Datatables -->
-    
-    <script>
-        $(window).load(function(){
-            //$('#cargando').fadeOut();            
-        });
-        
-        $(document).ready(function() { 
-            //tag = new meta();
-            //tag.graficar($('#totComp').html(),$('#totCons').html(),$('#totCohe').html());
-            //tag.graficar();
-        });
-    </script>
   </body>
 </html>

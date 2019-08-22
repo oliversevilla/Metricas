@@ -1,21 +1,22 @@
 <?php
-//echo "Pendiente para pruebas";exit;
+//carga de libs
 require_once("../../../global.php");
 require_once("../../modelo/oa/moOA.php");
+//inicia sesion
 session_start();
-
+//acceso a globales
 global $VGtamanoPagina;
+//si no inicio sesion redirecciona a pagina de login
 if (!isset($_SESSION['idUsuario'])) {
     header("Location: ../../../login");
     exit;
 }
-
-////$empresa=new empresa($_SESSION['idUsuario'],$_SESSION['idEmpresa']);
+//vars locales
 $em_id=1;////$empresa->em_id;
 $em_nombre="UTPL";////$empresa->em_nombre;
 $em_tipo_doc="";////$empresa->em_tipo_doc;
 $em_nro_doc="";////$empresa->em_nro_doc;
-
+//instacio oobjetos
 $oa=new oa(0);
 $oa->getAll();
 $arrOA = $oa->arregloOARepo;
@@ -38,13 +39,6 @@ $arrOA = $oa->arregloOARepo;
     <link href="../../../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="../../../vendors/nprogress/nprogress.css" rel="stylesheet">
     <link href="../../../vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!--<link href="../../../vendors/select2/dist/css/select2.min.css" rel="stylesheet">    
-    <link href="../../../build/css/custom.min.css" rel="stylesheet">
-    <link href="../../../css/estilo.css" rel="stylesheet">-->
-    <!-- JqPlot -->
-    <!--<link href="../../../css/jquery.jqplot.min.css" rel="stylesheet">
-    <link href="../../../css/shCoreDefault.min.css" rel="stylesheet">
-    <link href="../../../css/shThemejqPlot.min.css" rel="stylesheet">-->
     
     <!-- Datatables -->
     <link href="../../../vendors/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
@@ -52,13 +46,11 @@ $arrOA = $oa->arregloOARepo;
     <link href="../../../vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css" rel="stylesheet">
     <link href="../../../vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
     <link href="../../../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
-    <!--<link href="../../../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />-->
     
     <link href="../../../build/css/custom.min.css" rel="stylesheet">
     <link href="../../../css/estilo.css" rel="stylesheet">
     
     <script language="javascript" type="text/javascript" src="../../../js/meta/meta.js"></script>
-    <!--<script language="javascript" type="text/javascript" src="../../../js/cliente/cliente.js"></script>-->
     <script language="javascript" type="text/javascript" src="../../../js/global.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/inicio.js"></script>
   </head>
@@ -173,17 +165,6 @@ $arrOA = $oa->arregloOARepo;
                         <ul class="nav navbar-right panel_toolbox">
                           <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                           </li>
-                          <!--<li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                              <li><a href="#">Settings 1</a>
-                              </li>
-                              <li><a href="#">Settings 2</a>
-                              </li>
-                            </ul>
-                          </li>
-                          <li><a class="close-link"><i class="fa fa-close"></i></a>-->
-                          </li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
@@ -228,8 +209,7 @@ $arrOA = $oa->arregloOARepo;
 
         <!-- footer content -->
         <footer>
-          <div class="pull-left">
-                <!--<button class="btn-sm btn btn-dark" onclick="window.location.href='frmNewMeta';">Nuevo Análisis</button>-->
+          <div class="pull-left">                
           </div>
           <div class="pull-right">
             &copy; <?php echo date('Y');?> Análisis de Métricas por <a href="../index" target="_blank">Oliver Sevilla</a>
@@ -290,7 +270,7 @@ $arrOA = $oa->arregloOARepo;
     
     <script>
       $(document).ready(function() { 
-        
+        //constructor para tablas
         $('#datatable').dataTable();
         
       });
@@ -299,6 +279,7 @@ $arrOA = $oa->arregloOARepo;
     <!-- /Datatables -->
     
     <script>
+        //cargar imagen "cargando" al inciar
         $(window).load(function(){
             $('#cargando').fadeOut();
         });
