@@ -1,4 +1,5 @@
 <?php
+//carga settings de la bdd
 if (is_file("../clsConexion.php")){
     require_once("../clsConexion.php");
     require_once("../global.php");
@@ -19,11 +20,9 @@ else{
     require_once("clsConexion.php");//desde FE
     require_once("global.php");//desde FE
 }
-//require_once("../../../../clsConexion.php");
-//require_once("../../../../global.php");
-
+//creacion de la clase
 class usuario extends conexion{
-
+        //creacion de atributos de clase
 	var $us_id; // Integer PK
 	var $us_nombre;
 	var $us_apellido;
@@ -36,9 +35,8 @@ class usuario extends conexion{
 	var $us_estado;
 	var $us_avatar;
 	var $us_sin_encriptar;
-        //var $us_coac;
         var $arregloUsuario;
-    
+        //constructor
 	function usuario($us_id)
 	{
             if($us_id>-1)
@@ -69,7 +67,7 @@ class usuario extends conexion{
             }
 	}
 
-    
+        //creacion de objeto de clase
 	function setUsuario($result)
 	{
 		$this->us_id=$this->getField($result,0);	
@@ -86,7 +84,7 @@ class usuario extends conexion{
                 $this->us_sin_encriptar=$this->getField($result,11);
                 //$this->us_coac=$this->getField($result,12);
 	}
-    
+        //creacion de artreglo de objetos de clase
 	function setArregloUsuario($result)
 	{
 		$usuario=new usuario(-1);
@@ -106,13 +104,9 @@ class usuario extends conexion{
 		return $usuario;
 	}
 
-    //function insertar($id_id,$pa_id,$fe_id,$fere_nombre,$fere_descripcion,$fere_categoria,$se_id)
-    //{   
-        /*$where = "WHERE id_id=$id_id and pa_id=$pa_id and fe_id=$fe_id";
-        $queryUpdate="UPDATE guutfestivo SET fe_calificacion=fe_calificacion+$calificacion,fe_total_votos=fe_total_votos+1 $where";
-        $result = $this->select($queryUpdate);
-        return $result; //true o false*/
-    //}
+        //********************************
+        //Creacion de metodos de la clase
+        //********************************
         
         function login($us_mail,$us_clave)
 	{ 
