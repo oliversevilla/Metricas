@@ -1,4 +1,5 @@
 <?php
+//carga settings de la bdd
 if (is_file("../clsConexion.php")){
     require_once("../clsConexion.php");
     require_once("../global.php");
@@ -19,15 +20,14 @@ else{
     require_once("clsConexion.php");//desde FE
     require_once("global.php");//desde FE
 }
-//require_once("../../../../clsConexion.php");
-//require_once("../../../../global.php");
-
+//creacion de la clase
 class repo extends conexion{
+    //creacion de atributos de clase
     var $re_id;//PK
     var $re_dominio;
     var $re_url;
     var $arregloRepo;
-
+    //constructor
     function repo($re_id)
     {
         if($re_id>-1)
@@ -58,14 +58,14 @@ class repo extends conexion{
         }
     }
 
-
+    //creacion de objeto de clase
     function setRepo($result)
     {
             $this->re_id=$this->getField($result,0);	
             $this->re_dominio=$this->getField($result,1);	
             $this->re_url=$this->getField($result,2);
     }
-
+    //creacion de artreglo de objetos de clase
     function setArregloRepo($result)
     {
             $repo=new repo(-1);
@@ -75,7 +75,10 @@ class repo extends conexion{
             return $repo;
     }
 
-
+    //********************************
+    //Creacion de metodos de la clase
+    //********************************
+    
     function insert($re_dominio,$re_url)
     {
         $queryBusqueda="SELECT max(re_id) FROM merepo";
