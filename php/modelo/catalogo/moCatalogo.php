@@ -1,4 +1,5 @@
 <?php
+//carga settings de la bdd
 if (is_file("../clsConexion.php")){
     require_once("../clsConexion.php");
     require_once("../global.php");
@@ -19,9 +20,9 @@ else{
     require_once("clsConexion.php");//desde FE
     require_once("global.php");//desde FE
 }
-
+//creacion de la clase
 class catalogo extends conexion {
-
+    //creacion de atributos de clase
     var $ta_id;
     var $ca_id;
     var $ca_desc;
@@ -29,7 +30,7 @@ class catalogo extends conexion {
     var $ca_subgrupo;
     var $ca_peso;
     var $arregloCatalogos;
-
+    //constructor
     function catalogo($ta_id,$ca_id) {
         if ($ta_id > 0) {            
             $filtro = "";
@@ -56,7 +57,7 @@ class catalogo extends conexion {
             }
         }
     }
-
+    //creacion de objeto de clase
     function setCatalogo($result) {
         $this->ta_id = $this->getField($result, 0);
         $this->ca_id = $this->getField($result, 1);
@@ -65,7 +66,7 @@ class catalogo extends conexion {
         $this->ca_subgrupo = $this->getField($result, 4);
         $this->ca_peso = $this->getField($result, 5);
     }
-
+    //creacion de artreglo de objetos de clase
     function setArregloCatalogos($result) {
         $catalogo = new catalogo(0, '', 1);
         $catalogo->ta_id = $this->getField($result, 0);
