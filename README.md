@@ -1,5 +1,5 @@
 # metricas
-App web para calculo de metricas de documentos almacenados en repositorios publicos tales como tesis, publicaciones y libros.
+App web para la implementación de métricas de calidad en repositorios educativos abierto.
 
 Arquitectura
 ------------
