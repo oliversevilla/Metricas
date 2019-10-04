@@ -15,7 +15,7 @@ $arrCatDC=$catDc->arregloCatalogos;
 $catLom = new catalogo(2,'');//2 si es LOM
 $arrCatLom=$catLom->arregloCatalogos;      
 //Variables comunes
-$url = $_REQUEST['url'];
+$url = trim($_REQUEST['url']);
 $dominio =  dominio($url);
 $tags = get_meta_tags($url);//busca y almacena la estructura Doublin Core
 $xml = simplexml_load_file($url);//busca y almacena la estructura LOM
