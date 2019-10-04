@@ -353,7 +353,7 @@ function getTotals($oa_id){
     <script>
       $(document).ready(function() { 
         //constructor para tablas
-        $('#datatable').dataTable();
+        $('#datatable').dataTable({"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]});
         
       });
       
