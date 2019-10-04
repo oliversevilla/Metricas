@@ -49,10 +49,23 @@ $em_nro_doc="";////$empresa->em_nro_doc;
     <link href="../../../vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <link href="../../../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" type="text/css" />
     
+    <script language="javascript" type="text/javascript" src="../../../js/html2canvas.min.js"></script>
+    <script language="javascript" type="text/javascript" src="../../../js/jspdf.min.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/meta/meta.js"></script>
     <!--<script language="javascript" type="text/javascript" src="../../../js/cliente/cliente.js"></script>-->
     <script language="javascript" type="text/javascript" src="../../../js/global.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/inicio.js"></script>
+    <style type="text/css">
+        #chart3 .jqplot-point-label {
+          border: 1.5px solid #aaaaaa;
+          padding: 1px 3px;
+          background-color: #eeccdd;
+        }
+        .jqplot-xaxis-tick{
+            font-weight: bold !important;
+            font-size: 14px !important;
+        }
+    </style>
   </head>
 
   <body class="nav-md" style="overflow-x:hidden" onload="initMeta();">
@@ -86,11 +99,12 @@ $em_nro_doc="";////$empresa->em_nro_doc;
                   <li><a href="../inicio"><i class="fa fa-home"></i> Inicio</a></li>                  
                   <li><a><i class="fa fa-bar-chart"></i> Calcular Métricas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="frmBddMeta">Desde una base de datos</a></li>
+                      <li><a href="frmBddMeta">Desde un archivo</a></li>
                       <li class="current-page"><a href="">Desde una URL</a></li>                      
                     </ul>
                   </li>
                   <li><a href="../oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
+                  <li><a href="../oa/frmRptOA"><i class="fa fa-file-o"></i> Reporte</a></li>
                 </ul>
               </div>
 
@@ -165,31 +179,35 @@ $em_nro_doc="";////$empresa->em_nro_doc;
                     <form class="form-horizontal form-label-left input_mask" style="min-height:50px;">                        
                         <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
                             1. Ingrese la URL del repositorio<br />
-                            <small style="color:#AFBBC8;">La URL deberá dirigir a una web HTML (Dublin Core) o XML (LOM)</small>
+                            <small style="color:#AFBBC8;font-weight: normal;">La URL deberá dirigir a una web HTML (Dublin Core) o XML (LOM)</small>
                         </label>
                         <br /><br /><br />                                                    
                         <div class="col-xs-9 input-group has-feedback" style="left:10px;">
                             <div class="input-group-addon">
                             <i class="fa fa-globe"></i>
-                        </div>
-                        <input type="text" class="form-control pull-right" id="txtUrl" value="http://dspace.utpl.edu.ec/handle/123456789/5519"/>
+                        </div>                            
+                        <!--
+                            http://dspace.utpl.edu.ec/handle/123456789/5519
+                            http://repositorio.uchile.cl/handle/2250/132985
+                        -->                        
+                        <input type="text" class="form-control pull-right" id="txtUrl" placeholder="" value=""/>                                                
                         <!--<input style="font-size:14px;font-family:verdana,tahoma;background:#DCE2E7;" class="btn-lg" size="25" type="file" name="fileCli[]" id="archivoCli" onchange="$('#subio').css('visibility','hidden');" />-->
                         </div>
                     </form>                  
                     <br />
                     <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                        2. Subir los metadatas (HTML-XML) al Servidor<br />
-                        <small style="color:#AFBBC8;">Subir el archivo URL al servidor y verificar si cumple con los estándares Dublin Core o LOM</small>
+                        2. Subir los metadatos (HTML-XML) al Servidor<br />
+                        <small style="color:#AFBBC8;font-weight: normal;">Subir el archivo URL al servidor y verificar si cumple con los estándares Dublin Core o LOM</small>
                     </label>
                     <div class="col-xs-6 form-group has-feedback">
-                        <button class="btn-lg btn btn-success" onclick="tag.uploadURL($('#txtUrl').val());">Subir los Archivos</button><span id="subio" style="visibility: hidden;font-size:18px;color:#26B99A;"><i class="fa fa-check" style="color:#080;"></i> Archivos subidos</span>
+                        <button class="btn-lg btn btn-success" onclick="tag.uploadURL($('#txtUrl').val());">Subir el Archivo</button><span id="subio" style="visibility: hidden;font-size:18px;color:#26B99A;"><i class="fa fa-check" style="color:#080;"></i> Archivos subidos</span>
                     </div>
                     <br />
                     <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                        3. Realizar cáculo de métricas
+                        3. Realizar cálculo de métricas
                     </label>
                     <div class="col-xs-12 form-group has-feedback">
-                        <button class="btn-lg btn btn-success" onclick="tag.get($('#oa_id').val());">Calcular Métricas</button>
+                        <button id="btnCalMetNew" class="btn-lg btn btn-success disabled" onclick="tag.get($('#oa_id').val());">Calcular Métricas</button>
                     </div>
                     <br /><br />
                     <div id="resultsMeta" style="display:none;">
@@ -220,12 +238,14 @@ $em_nro_doc="";////$empresa->em_nro_doc;
                         </div><br /><br />
                         <div id="chart3" class="example-chart jqplot-target" style="height: 300px; width: 500px; position: relative;"></div>
                         <br /><br />
+                        <!--
                         <span style="width:50px;height: 30px;background:#73C774;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;Y=1&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <span style="width:50px;height: 30px;background:#D9D97E;color:#000;">&nbsp;0.5<=Y<1&nbsp;</span>
                         <span style="width:50px;height: 30px;background:#D97E7E;color:#000;">&nbsp;&nbsp;&nbsp;Y<0.5&nbsp;&nbsp;&nbsp;</span>
                         <br /><br /><br /><br />
+                        -->
                         <div id="rptMetricas" class="col-xs-12 form-group has-feedback" style="width:300px;height:80px;position:relative;left:-10px;">
-                            <button class='btn-sm btn btn-danger' onclick="tag.rpt($('#oa_id').val());">Generar Reporte de Métricas Inconsistentes</button>
+                            <button class='btn-sm btn btn-danger' onclick="tag.rpt($('#oa_id').val(),'pdf');">Reporte de Análisis</button>
                         </div>
                     </div>
                   </div>
@@ -301,6 +321,7 @@ $em_nro_doc="";////$empresa->em_nro_doc;
     <script src="../../../js/jqplot.highlighter.min.js"></script>    
     <script src="../../../js/jqplot.barRenderer.min.js"></script>
     <script src="../../../js/jqplot.categoryAxisRenderer.min.js"></script>
+    <script src="../../../js/jqplot.pointLabels.js"></script>
     
     <script src="../../../vendors/iCheck/icheck2.min.js"></script>
     <script src="../../../build/js/custom.min.js"></script>

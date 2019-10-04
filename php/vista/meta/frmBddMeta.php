@@ -87,11 +87,12 @@ $em_nro_doc="";////$empresa->em_nro_doc;
                   <li><a href="../inicio"><i class="fa fa-home"></i> Inicio</a></li>                  
                   <li><a><i class="fa fa-bar-chart"></i> Calcular Métricas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li class="current-page"><a href="">Desde una base de datos</a></li>
+                      <li class="current-page"><a href="">Desde un archivo</a></li>
                       <li><a href="frmNewMeta">Desde una URL</a></li>                      
                     </ul>
                   </li>
                   <li><a href="../oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
+                  <li><a href="../oa/frmRptOA"><i class="fa fa-file-o"></i> Reporte</a></li>
                 </ul>
               </div>
 
@@ -152,7 +153,7 @@ $em_nro_doc="";////$empresa->em_nro_doc;
           <div class="">
             <div class="page-title">
               <div class="col-md-12 col-sm-12 col-xs-12">
-                <h3>Análisis de Métricas desde una Base de Datos<small></small> </h3>
+                <h3>Análisis de Métricas desde un Archivo<small></small> </h3>
               </div>              
             </div>
 
@@ -165,8 +166,8 @@ $em_nro_doc="";////$empresa->em_nro_doc;
                   <div class="x_content">
                     <form class="form-horizontal form-label-left input_mask" style="min-height:50px;">                        
                         <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                            1. Seleccione el archivo de base de datos<br />
-                            <small style="color:#AFBBC8;">Archivo .txt con la lista de enlaces a los OAs (sin espacios en blanco, sin saltos de línea y separados por ';')</small>
+                            1. Seleccione el archivo TXT<br />
+                            <small style="color:#AFBBC8;font-weight: normal;">Archivo .txt con la lista de enlaces a los OAs (sin espacios en blanco, sin saltos de línea y separados por ';')</small>
                         </label>
                         <div class="col-xs-12 form-group has-feedback">
                             <!--<small style="font-size:14px;color:#9CAABA;">Archivo .txt con la lista de enlaces a los OAs separados por ';'</small>-->
@@ -176,17 +177,17 @@ $em_nro_doc="";////$empresa->em_nro_doc;
                     <br />
                     <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
                         2. Subir el archivo TXT al servidor<br />
-                        <small style="color:#AFBBC8;">Verificar extensión .txt y subir al servidor</small>
+                        <small style="color:#AFBBC8;font-weight: normal;">Verificar extensión .txt y subir al servidor</small>
                     </label>
                     <div class="col-xs-6 form-group has-feedback">
-                        <button class="btn-lg btn btn-dark" onclick="tag.validateUploadFileTXT();">Subir el Archivo</button><span id="subio" style="visibility: hidden;font-size:18px;"><i class="fa fa-check" style="color:#080;"></i> Archivo subido</span>
+                        <button class="btn-lg btn btn-success" onclick="tag.validateUploadFileTXT();">Subir el Archivo</button><span id="subio" style="visibility: hidden;font-size:18px;"><i class="fa fa-check" style="color:#080;"></i> Archivo subido</span>
                     </div>
                     <br />
                     <label class="control-label col-md-12 col-sm-12 col-xs-12" style="font-size:16px;text-align: left;">
-                        3. Realizar cáculo de métricas
+                        3. Realizar cálculo de métricas
                     </label>
                     <div class="col-xs-12 form-group has-feedback">
-                        <button class="btn-lg btn btn-success" onclick="tag.calcularTXT();">Calcular Métricas</button>
+                        <button id="btnCalMetBdd" class="btn-lg btn btn-success disabled" onclick="tag.calcularTXT();">Calcular Métricas</button>
                     </div>
                     <br /><br />
                     <div id="resultsMeta" style="display:none;"><br />                        
