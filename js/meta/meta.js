@@ -239,8 +239,18 @@ meta.prototype.graficar = function(comp,cons,cohe){
                    {renderer: $.jqplot.LineRenderer},
                    {renderer: $.jqplot.LineRenderer} ], 
          //legend: { show: true, placement: 'outside', labels: ticks},  // give the legend the tick labels
-         axes:   { xaxis: { renderer: $.jqplot.CategoryAxisRenderer, ticks: ticks }}, 
-         yaxis:  {  tickOptions:{ formatString:'%.2f%' } }
+         ////axes:   { xaxis: { renderer: $.jqplot.CategoryAxisRenderer, ticks: ticks }}, 
+         ////yaxis:  { tickOptions:{ formatString:'%.2f%' } }
+                  
+         axes:{ xaxis:{ renderer: $.jqplot.CategoryAxisRenderer, ticks: ticks},
+            yaxis: {
+                min:0,
+                max:1.0,
+                tickOptions:{ formatString:'%.2f%' }
+            }
+        },
+         
+         
     });
 };
 
