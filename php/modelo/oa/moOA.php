@@ -188,5 +188,24 @@ class oa extends conexion{
                 $indice++;
         }
     }
+    
+    //Obtener todos los OA analizados dado re_id
+    function getAllRepo($re_id)
+    {
+        if($re_id>0)
+            $query="SELECT o.*,r.re_dominio FROM meoa o JOIN merepo r ON (o.re_id = r.re_id) WHERE r.re_id=$re_id ORDER BY oa_fec DESC";
+        else
+            $query="SELECT o.*,r.re_dominio FROM meoa o JOIN merepo r ON (o.re_id = r.re_id) ORDER BY oa_fec DESC";
+        
+        $result = $this->strSql($query);
+        $indice=0;
+        $this->arregloOARepo=array();
+        while (!$this->esUltimo($result))
+        {		
+                $this->arregloOARepo[$indice]=$this->setArregloOARepo($result);
+                $result->MoveNext();
+                $indice++;
+        }
+    }
 }
 ?>
