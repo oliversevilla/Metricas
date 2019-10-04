@@ -65,6 +65,8 @@ $totCompletitud = round($totCompletitud,2);
 $totConsistencia = round(($totConsistencia + intval($valConsistenciaTmp)) / $valConsistencia,2);$totConsistencia=number_format($totConsistencia,2);
 $totCoherencia = round(($totCoherencia + intval($valCoherencia)) / $valCoherenciaPiQi,2);
 
+if($totCoherencia>1) $totCoherencia=1.00;
+
 if($oa->oa_std=='DC') $totConsistencia='No Aplica';
 
 $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</td><td><strong>TOTAL M&Eacute;TRICA</strong></td><td style='text-align:right;'>".number_format($totPesoVal,2)."</td><td style='text-align:right;'>".number_format($totPesoPorcentaje,2)."%</td><td id='totComp' style='text-align:right;'>".number_format($totCompletitud,2)."</td><td id='totCons' style='text-align:right;'>".$totConsistencia."</td><td id='totCohe' style='text-align:right;'>".number_format($totCoherencia,2)."</td><td>".$oa->oa_std."</td></tr>";
@@ -106,6 +108,10 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
     <script src="../../../vendors/fastclick/lib/fastclick.js"></script>
     <script src="../../../vendors/nprogress/nprogress.js"></script>
     <script src="../../../vendors/iCheck/icheck.min.js"></script>
+    <!-- JqPlot -->
+    <link href="../../../css/jquery.jqplot.min.css" rel="stylesheet">
+    <link href="../../../css/shCoreDefault.min.css" rel="stylesheet">
+    <link href="../../../css/shThemejqPlot.min.css" rel="stylesheet">
     <!-- Datatables -->
     <script src="../../../vendors/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="../../../vendors/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -136,10 +142,29 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
     <script src="../../../js/jqplot.highlighter.min.js"></script>    
     <script src="../../../js/jqplot.barRenderer.min.js"></script>
     <script src="../../../js/jqplot.categoryAxisRenderer.min.js"></script>
+    <script src="../../../js/jqplot.pointLabels.js"></script>
     
+    <script language="javascript" type="text/javascript" src="../../../js/html2canvas.min.js"></script>
+    <script language="javascript" type="text/javascript" src="../../../js/jspdf.min.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/meta/meta.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/global.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/inicio.js"></script>
+    <style type="text/css">
+        #chart3 .jqplot-point-label {
+          border: 1.5px solid #aaaaaa;
+          padding: 1px 3px;
+          background-color: #eeccdd;
+        }
+        .jqplot-xaxis-tick{
+            font-weight: bold !important;
+            font-size: 14px !important;
+        }
+        .jqplot-point-label {
+            border: 1.5px solid #aaaaaa !important;
+            padding: 1px 3px !important;
+            background-color: #eeccdd !important;
+        }
+    </style>
   </head>
 
   <body class="nav-md" style="overflow-x:hidden">
@@ -173,11 +198,12 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
                   <li><a href="../inicio"><i class="fa fa-home"></i> Inicio</a></li>                  
                   <li><a><i class="fa fa-bar-chart"></i> Calcular Métricas <span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu" style="display: block;">
-                      <li><a href="../meta/frmBddMeta">Desde una base de datos</a></li>
+                      <li><a href="../meta/frmBddMeta">Desde un archivo</a></li>
                       <li><a href="../meta/frmNewMeta">Desde una URL</a></li>                      
                     </ul>
                   </li>
                   <li class="current-page"><a href="../oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
+                  <li><a href="frmRptOA"><i class="fa fa-file-o"></i> Reporte</a></li>
                 </ul>
               </div>
             </div>
@@ -233,7 +259,7 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
         <!-- /top navigation -->
 
         <!-- page content -->
-        <div class="right_col" role="main">
+        <div class="right_col" role="main" id="resultadoMetrica">
             <div class="">
                 <div class="page-title">
                   <div class="title_left">
@@ -282,12 +308,12 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
                                 <?php if($totConsistencia=='No Aplica') $totConsistencia2=0;else $totConsistencia2=$totConsistencia;?> 
                                 tag.graficar(<?php echo $totCompletitud;?>,<?php echo $totConsistencia2;?>,<?php echo $totCoherencia;?>);
                             </script>
-                            <span style="width:50px;height: 30px;background:#73C774;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;Y=1&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <!--<span style="width:50px;height: 30px;background:#73C774;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;Y=1&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             <span style="width:50px;height: 30px;background:#D9D97E;color:#000;">&nbsp;0.5<=Y<1&nbsp;</span>
                             <span style="width:50px;height: 30px;background:#D97E7E;color:#000;">&nbsp;&nbsp;&nbsp;Y<0.5&nbsp;&nbsp;&nbsp;</span>
-                            <br /><br /><br /><br />
+                            <br /><br /><br /><br />-->
                             <div id="rptMetricas" class="col-xs-12 form-group has-feedback" style="width:300px;height:80px;position:relative;left:-10px;">
-                                <button class='btn-sm btn btn-danger' onclick="tag.rpt(<?php echo $oa->oa_id;?>);">Generar Reporte de Métricas Inconsistentes</button>
+                                <button class='btn-sm btn btn-danger' onclick="tag.rpt(<?php echo $oa->oa_id;?>,'pdf');">Reporte de Análisis</button>
                             </div>
                         </div>
                       </div>

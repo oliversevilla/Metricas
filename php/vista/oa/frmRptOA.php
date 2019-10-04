@@ -4,6 +4,7 @@ require_once("../../../global.php");
 require_once("../../modelo/oa/moOA.php");
 require_once("../../modelo/catalogo/moCatalogo.php");
 require_once("../../modelo/meta/moMeta.php");
+require_once("../../modelo/repo/moRepo.php");
 //inicia sesion
 session_start();
 //acceso a globales
@@ -18,10 +19,17 @@ $em_id=1;////$empresa->em_id;
 $em_nombre="UTPL";////$empresa->em_nombre;
 $em_tipo_doc="";////$empresa->em_tipo_doc;
 $em_nro_doc="";////$empresa->em_nro_doc;
-//instacio oobjetos
+
+//instancio objetos
+if(isset($_REQUEST['re_id'])) $re_id=$_REQUEST['re_id'];
+else $re_id=0;
+//para tabla
 $oa=new oa(0);
-$oa->getAll();
+$oa->getAllRepo($re_id);
 $arrOA = $oa->arregloOARepo;
+//para combo
+$repo=new repo(0);
+$arrRepo=$repo->arregloRepo;
 
 function getTotals($oa_id){
     //Instanciar objetos
@@ -89,10 +97,14 @@ function getTotals($oa_id){
     if($porcCohe==100) $bgCohe='bg-green';if($porcCohe>=50 && $porcCohe<100) $bgCohe='bg-blue';if($porcCohe<50) $bgCohe='bg-red';
     if($oa2->oa_std=='DC') {$bgCons='bg-white';$porcCons='NA';$bgAlternoCons='background:#c9c9c9 !important;';}
     
+    /*
     $tblMeta = $tblMeta."<small class='label pull-left ".$bgComp."' style='font-size:11px;min-width:40px !important;'>".$porcComp."</small>&nbsp;&nbsp;<span style='position:relative;top:-5px;font-size:9px;'>COMPLETITUD</span><br />";
     $tblMeta = $tblMeta."<small class='label pull-left ".$bgCons."' style='".$bgAlternoCons."font-size:11px;min-width:40px !important;'>".$porcCons."</small>&nbsp;&nbsp;<span style='position:relative;top:-5px;font-size:9px;'>CONSISTENCIA</span><br />";
     $tblMeta = $tblMeta."<small class='label pull-left ".$bgCohe."' style='font-size:11px;min-width:40px !important;'>".$porcCohe."</small>&nbsp;&nbsp;<span style='position:relative;top:-5px;font-size:9px;'>COHERENCIA</span>";    
-
+    */
+    
+    $tblMeta = $tblMeta.$porcComp." Completitud, ".$porcCons." Consistencia, ".$porcCohe." Coherencia";
+    
     return $tblMeta;
 }
 
@@ -125,6 +137,7 @@ function getTotals($oa_id){
     <link href="../../../build/css/custom.min.css" rel="stylesheet">
     <link href="../../../css/estilo.css" rel="stylesheet">
     
+    <script language="javascript" type="text/javascript" src="../../../js/jspdf.min.js"></script>    
     <script language="javascript" type="text/javascript" src="../../../js/meta/meta.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/global.js"></script>
     <script language="javascript" type="text/javascript" src="../../../js/inicio.js"></script>
@@ -165,8 +178,8 @@ function getTotals($oa_id){
                       <li><a href="../meta/frmNewMeta">Desde una URL</a></li>                      
                     </ul>
                   </li>
-                  <li class="current-page"><a href="../oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
-                  <li><a href="frmRptOA"><i class="fa fa-file-o"></i> Reporte</a></li>
+                  <li><a href="../oa/frmListOA"><i class="fa fa-book"></i> Repositorios Analizados</a></li>
+                  <li class="current-page"><a href="../oa/frmRptOA"><i class="fa fa-file-o"></i> Reporte</a></li>
                 </ul>
               </div>
             </div>
@@ -226,7 +239,7 @@ function getTotals($oa_id){
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3>Repositorios Analizados <small></small> </h3>
+                <h3>Reporte de OAs por Repositorio <small></small> </h3>
               </div>              
             </div>
 
@@ -237,7 +250,31 @@ function getTotals($oa_id){
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Objetos de Análisis <small>Click en el título para ver los resultados</small></h2>
+                        
+                        
+                        <div class="form-group col-md-4 col-sm-4 col-xs-4">
+                            <label style="font-size: 14px;">Repositorio</label><br />
+                            <small style="font-size: 11px;">Selecione un repositorio para imprimir los objetos analizados</small>
+                            <br /><br />
+                            <select id="re_id" name="re_id" onchange="tag.changeRepo()" class="form-control">
+                                <option value='0'>Todos</option>
+                                <?php
+                                    for($i=0;$i<count($arrRepo);$i++){
+                                        //seleccionar el re_id consultado
+                                        if($_REQUEST['re_id']==$arrRepo[$i]->re_id) $selected='selected';
+                                        else $selected='';
+                                        $miDomain0=$arrRepo[$i]->re_dominio;
+                                        $arrDomain0=explode(".", $miDomain0);
+                                        if(count($arrDomain0)>2)
+                                            echo "<option ".$selected." value='".$arrRepo[$i]->re_id."'>".strtoupper($arrDomain0[1])."</option>";
+                                        else
+                                            echo "<option ".$selected." value='".$arrRepo[$i]->re_id."'>".strtoupper($arrDomain0[0])."</option>";
+                                    }
+                                ?>
+                            </select>                            
+                        </div>
+                        
+                        
                         <ul class="nav navbar-right panel_toolbox">
                           <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                           </li>
@@ -249,36 +286,45 @@ function getTotals($oa_id){
                             <thead>
                                 <tr>
                                   <th width="2%">#</th>
-                                  <th width="20%">Repositorio</th>
-                                  <th width="17%">URL</th>
-                                  <th width="18%">Título</th>
-                                  <th width="15%">Keywords</th>
+                                  <th width="17%">Repositorio</th>
+                                  <!--<th width="17%">URL</th>-->
+                                  <th width="43%">Título</th>
+                                  <th width="20%">Keywords</th>
                                   <th width="3%">Estándar</th>
-                                  <th width="5%">Fecha</th>
+                                  <!--<th width="5%">Fecha</th>-->
                                   <th width="20%">Resultados</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <!--<tr><th>#</th><th>REPOSITORIO</th><th>TITULO</th><th>KEYWORDS</th><th>ESTANDAR</th><th>RESULTADOS</th></tr>-->
                                 <?php
                                 for($i=0;$i<count($arrOA);$i++){
                                     $j=$i+1;
                                     echo '<tr>';
-                                        echo '<th scope="row">'.$j.'</th>';
+                                        echo '<td scope="row">'.$j.'</td>';
                                         $miDomain=$arrOA[$i]->re_dominio;
                                         $arrDomain=explode(".", $miDomain);
-                                        echo '<td>'.strtoupper($arrDomain[1]).'</td>';
-                                        echo '<td>'.$arrOA[$i]->re_dominio.'</td>';
-                                        echo '<td title="'.$arrOA[$i]->oa_titulo.'"><a onclick="window.location.href=\'frmDetOA?oa_id='.$arrOA[$i]->oa_id.'\';" style="color:#3498DB;text-decoration:underline;cursor:pointer;">'.cortaTexto($arrOA[$i]->oa_titulo,60).'</a></td>';
-                                        echo '<td><a href="'.$arrOA[$i]->oa_url.'" target="_blank" style="text-decoration:underline;">'.$arrOA[$i]->oa_url.'</a></td>';
+                                        if(count($arrDomain)>2)
+                                            echo '<td>'.cortaTexto(strtoupper($arrDomain[1]),17).'</td>';
+                                        else
+                                            echo '<td>'.cortaTexto(strtoupper($arrDomain[0]),17).'</td>';
+                                        //echo '<td>'.$arrOA[$i]->re_dominio.'</td>';
+                                        if(trim($arrOA[$i]->oa_titulo)=='') $miTit="-";
+                                        else $miTit=$arrOA[$i]->oa_titulo;
+                                        echo '<td title="'.$miTit.'">'.cortaTexto($miTit,55).'</td>';
+                                        echo '<td>'.cortaTexto($arrOA[$i]->oa_url,55).'</td>';
                                         echo '<td>'.$arrOA[$i]->oa_std.'</td>';
-                                        echo '<td>'.date('Y-m-d H:i:s', strtotime($arrOA[$i]->oa_fec)).'</td>';
+                                        //echo '<td>'.date('Y-m-d H:i:s', strtotime($arrOA[$i]->oa_fec)).'</td>';
                                         echo '<td>'.getTotals($arrOA[$i]->oa_id).'</td>';
                                     echo '</tr>';
                                 }
                                 ?>
                             </tbody>
                         </table>
-
+                        
+                        <div id="rptMetricas" class="col-xs-12 form-group has-feedback" style="width:300px;height:80px;position:relative;left:-10px;">
+                            <button class='btn-sm btn btn-danger' onclick="tag.rptRepo(<?php echo $_REQUEST['re_id'];?>,'pdf');">Descargar Reporte</button>
+                        </div>
                     </div>
                 </div>
               </div>
@@ -353,7 +399,7 @@ function getTotals($oa_id){
     <script>
       $(document).ready(function() { 
         //constructor para tablas
-        $('#datatable').dataTable();
+        $('#datatable').dataTable({"lengthMenu": [[-1, 10, 25, 50], ["Todos", 10, 25, 50]]});
         
       });
       
