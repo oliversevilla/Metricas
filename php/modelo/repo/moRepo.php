@@ -51,7 +51,7 @@ class repo extends conexion{
             {		
                 $this->setRepo($result);
                 if($indice!=-1)
-                    $this->setRepo[$indice]=$this->setArregloRepo($result);
+                    $this->arregloRepo[$indice]=$this->setArregloRepo($result);
                 $result->MoveNext();
                 $indice++;
             }
