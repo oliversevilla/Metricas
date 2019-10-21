@@ -306,7 +306,7 @@ $tblMeta = $tblMeta."<tr style='background:#B6E0FF;'><td>-</td><td>-</td><td>-</
                             <script type="text/javascript">                                
                                 tag = new meta();
                                 <?php if($totConsistencia=='No Aplica') $totConsistencia2=0;else $totConsistencia2=$totConsistencia;?> 
-                                tag.graficar(<?php echo $totCompletitud;?>,<?php echo $totConsistencia2;?>,<?php echo $totCoherencia;?>);
+                                tag.graficar(<?php echo $totCompletitud;?>,<?php echo $totConsistencia2;?>,<?php echo $totCoherencia;?>,'<?php echo $oa->oa_std;?>');
                             </script>
                             <!--<span style="width:50px;height: 30px;background:#73C774;color:#000;">&nbsp;&nbsp;&nbsp;&nbsp;Y=1&nbsp;&nbsp;&nbsp;&nbsp;</span>
                             <span style="width:50px;height: 30px;background:#D9D97E;color:#000;">&nbsp;0.5<=Y<1&nbsp;</span>
