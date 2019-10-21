@@ -16,8 +16,12 @@ function printRpt($oa_id){
     $contenido="";
     //$contenido .="Reporte de Métricas Inconsistentes\r\n\r\n";
     $contenido .="Archivo Analizado: ".$oa->oa_titulo."\r\n\r\n";
-    $contenido .="Estandar: ".$oa->oa_std."\r\n\r\n";
-    $contenido .="MÉTRICAS INCONSISTENTES:";
+    if(trim($oa->oa_std)=='DC') $miStd='Dublin Core (DC)';
+    else $miStd='Learning Object Metadata (LOM)';
+    //$contenido .="Estandar: ".$oa->oa_std."\r\n\r\n";
+    $contenido .="Estandar: ".$miStd."\r\n\r\n";
+    //$contenido .="MÉTRICAS INCONSISTENTES:";
+    $contenido .="Estimado usuario su archivo tiene inconvenientes en los siguientes metadatos:";
     for($i=0;$i<count($arrMeta);$i++){
         //Consultar campos descriptivos según id's de tablas respectivas
         if($oa->oa_std=='DC') $cat = new catalogo(1,$arrMeta[$i]->me_id); //DC
