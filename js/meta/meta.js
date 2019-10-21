@@ -121,7 +121,7 @@ meta.prototype.get = function(oa){
                 $("#tblMeta").html("");
                 $("#tblMeta").append(response);
                                
-                este.graficar($('#totComp').html(),$('#totCons').html(),$('#totCohe').html());
+                este.graficar($('#totComp').html(),$('#totCons').html(),$('#totCohe').html(),$.trim($('#htmlStd').html()));
                 
                 //$("#rptMetricas").css("display","block");
                 //$("#rptMetricas").html("hola");//<button class='btn-lg btn btn-success' onclick='meta.get($(\'#oa_id\').val());'>Generar Reporte de Métricas Inconsistentes</button>");
@@ -138,7 +138,7 @@ meta.prototype.get = function(oa){
 };
 
 //graficar metas
-meta.prototype.graficar = function(comp,cons,cohe){
+meta.prototype.graficar = function(comp,cons,cohe,std){
     
     /*
     var s1 = [comp,cons,cohe]; 
@@ -223,11 +223,15 @@ meta.prototype.graficar = function(comp,cons,cohe){
     });
     */
     var s1 = [parseFloat(comp),parseFloat(cons),parseFloat(cohe)];
-    var ticks = ['COMPLETITUD '+parseFloat(comp).toFixed(2), 'CONSISTENCIA '+parseFloat(cons).toFixed(2), 'COHERENCIA '+parseFloat(cohe).toFixed(2)]; 
+    
+    if ($.trim(std)=='DC')
+        var ticks = ['COMPLETITUD '+parseFloat(comp).toFixed(2), 'CONSISTENCIA N/A', 'COHERENCIA '+parseFloat(cohe).toFixed(2)]; 
+    else
+        var ticks = ['COMPLETITUD '+parseFloat(comp).toFixed(2), 'CONSISTENCIA '+parseFloat(cons).toFixed(2), 'COHERENCIA '+parseFloat(cohe).toFixed(2)]; 
     plot2 = $.jqplot('chart3', [s1,[],[]], { //give it extra blank series
     //$('#chart3').jqplot([line1], {
         //title: 'Bar Chart with Point Labels', 
-        //seriesColors:[compBarColor, consBarColor, coheBarColor],
+        seriesColors:[compBarColor, consBarColor, coheBarColor],
         seriesDefaults: { 
            renderer: $.jqplot.BarRenderer, 
            rendererOptions: { varyBarColor : true }, 
@@ -246,7 +250,7 @@ meta.prototype.graficar = function(comp,cons,cohe){
             yaxis: {
                 min:0,
                 max:1.0,
-                tickOptions:{ formatString:'%.2f%' }
+                tickOptions:{ formatString:'%.2f'}//'%.2f%'
             }
         },
          
